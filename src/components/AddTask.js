@@ -26,7 +26,7 @@ const AddTask = ({onAdd}) => {
                 />
             </div>
             <div className="form-control form-control-check ">
-                <label>Task</label>
+                <label>complete?</label>
                 <input type="checkbox"
                     checked={completed}
                     value={completed}

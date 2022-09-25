@@ -7,14 +7,11 @@ import Tasks from "./components/Tasks";
 import AddTask from './components/AddTask';
 import Footer from "./components/Footer";
 import About from './components/About';
-// import TaskDetails from './components/TaskDetails';
 import EditTask from './components/EditTask';
-import AddEditTask from './components/AddEditTask';
 
 function App() {
-  // const [showAddTask, setShowAddTask] = useState(false);
-  // const [showEditTask, setShowEditTask] = useState(false);
-  const [showAddEditTask, setShowAddEditTask] = useState(false);
+  const [showAddTask, setShowAddTask] = useState(false);
+  const [showEditTask, setShowEditTask] = useState(false);
 
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState([]);
@@ -38,8 +35,8 @@ function App() {
   }
 
   const newTask = () => {
-    setTask({ text: '', completed: false });
-    setShowAddEditTask(!showAddEditTask);
+    setShowAddTask(!showAddTask)
+    setShowEditTask(false)
   }
 
   // Add task
@@ -61,11 +58,12 @@ function App() {
   }
   //editTask
   const editTask = async (id) => {
+    setShowAddTask(false);
     const res = await fetch(`http://localhost:5000/tasks/${id}`);
     const data = await res.json();
     console.log(data);
     setTask(data);
-    setShowAddEditTask(true);
+    setShowEditTask(true);
 
   }
   // Update Task
@@ -79,7 +77,7 @@ function App() {
     });
     const data = await res.json();
     setTasks(tasks.map((task) => task.id === data.id ? { ...task, text: data.text, completed: data.completed } : task));
-    setShowAddEditTask(false);
+    setShowEditTask(false);
   }
 
   // delete task
@@ -113,7 +111,7 @@ function App() {
       <div className="container">
         <Header text="Task Tracker"
           newTask={newTask}
-          showAdd={showAddEditTask}
+          showAdd={showAddTask}
         />
 
 
@@ -121,9 +119,8 @@ function App() {
           <Route
             path='/'
             element={<>
-              {/* {showAddTask && <AddTask onAdd={addTask} />}
-              {showEditTask && <EditTask task={task} onUpdate={updateTask} />} */}
-              {showAddEditTask && <AddEditTask onAdd={addTask} task={task} onUpdate={updateTask} />}
+              {showAddTask && <AddTask onAdd={addTask} />}
+              {showEditTask && <EditTask task={task} onUpdate={updateTask} />}
 
               {tasks.length > 0 ?
                 <Tasks tasks={tasks}
@@ -137,8 +134,6 @@ function App() {
           />
 
           <Route path='/about' element={<About />} />
-          {/* <Route path='/TaskDetails/:id' element={<TaskDetails />} /> */}
-          {/* <Route path='/edit/:id' element={<EditTask />} /> */}
         </Routes>
         <Footer />
       </div>
